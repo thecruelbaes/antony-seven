@@ -1,0 +1,909 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Antony Seven — Колдун</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;600&family=EB+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --fire-1:  #E8541A;
+      --fire-2:  #C0392B;
+      --fire-3:  #FF6B35;
+      --blood:   #8B0000;
+      --dark:    #080608;
+      --dark-2:  #100809;
+      --dark-3:  #1A0D0D;
+      --text:    #D4C8B8;
+      --muted:   #7A6A5A;
+    }
+
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--dark);
+      color: var(--text);
+      font-family: 'EB Garamond', Georgia, serif;
+      font-size: 18px;
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    /* ── GRAIN ── */
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none; z-index: 2; opacity: 0.4;
+    }
+
+    /* ── AMBIENT GLOW ── */
+    .ambient {
+      position: fixed; pointer-events: none; z-index: 0;
+      border-radius: 50%; filter: blur(120px);
+      animation: ambPulse 10s ease infinite;
+    }
+    .ambient-1 {
+      width: 500px; height: 500px; background: var(--fire-2); opacity: 0.025;
+      top: -150px; right: -100px;
+    }
+    .ambient-2 {
+      width: 350px; height: 350px; background: var(--fire-1); opacity: 0.02;
+      bottom: 200px; left: -80px; animation-delay: 3s;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 22px 60px;
+      background: linear-gradient(to bottom, rgba(8,6,8,.97) 0%, transparent 100%);
+    }
+    .nav-logo { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+    .nav-logo-text { display: flex; flex-direction: column; }
+    .nav-logo-name {
+      font-family: 'Cinzel Decorative', serif; font-size: 13px;
+      letter-spacing: .25em; color: var(--text); line-height: 1;
+    }
+    .nav-logo-sub {
+      font-family: 'Cinzel', serif; font-size: 9px;
+      letter-spacing: .4em; color: var(--muted);
+      text-transform: uppercase; margin-top: 3px;
+    }
+    .lang-toggle {
+      display: flex; gap: 4px; font-family: 'Cinzel', serif;
+      font-size: 10px; letter-spacing: .2em;
+    }
+    .lang-btn {
+      background: none; border: none; color: var(--muted);
+      padding: 6px 10px; transition: color .3s;
+      font-family: inherit; font-size: inherit; letter-spacing: inherit; cursor: pointer;
+    }
+    .lang-btn.active { color: var(--fire-1); border-bottom: 1px solid var(--fire-1); }
+    .lang-btn:hover  { color: var(--fire-3); }
+    .lang-sep { color: var(--muted); opacity: .3; padding: 6px 0; font-size: 10px; }
+
+    /* ── HERO ── */
+    .hero {
+      position: relative; min-height: 100vh;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      text-align: center; padding: 120px 40px 180px; z-index: 10;
+    }
+    .sigil {
+      width: 110px; height: 110px; margin-bottom: 40px;
+      opacity: 0; animation: fadeIn 2s ease .5s forwards;
+    }
+    .hero-eyebrow {
+      font-family: 'Cinzel', serif; font-size: 10px;
+      letter-spacing: .55em; text-transform: uppercase; color: var(--fire-2);
+      margin-bottom: 20px; opacity: 0; animation: fadeUp 1s ease .8s forwards;
+    }
+    .hero-title {
+      font-family: 'Cinzel Decorative', serif;
+      font-size: clamp(52px, 9vw, 108px); font-weight: 900; line-height: .95;
+      background: linear-gradient(135deg, var(--text) 0%, #b8a898 40%, var(--fire-3) 75%, var(--fire-1) 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+      margin-bottom: 8px; opacity: 0; animation: fadeUp 1s ease 1s forwards;
+    }
+    .hero-subtitle {
+      font-family: 'Cinzel', serif; font-size: clamp(11px, 1.5vw, 14px);
+      letter-spacing: .5em; color: var(--muted); text-transform: uppercase;
+      margin-bottom: 44px; opacity: 0; animation: fadeUp 1s ease 1.2s forwards;
+    }
+    .hero-divider {
+      width: 1px; height: 70px;
+      background: linear-gradient(to bottom, transparent, var(--fire-2), transparent);
+      margin: 0 auto 44px; opacity: 0; animation: fadeIn 1s ease 1.4s forwards;
+    }
+    .hero-desc {
+      max-width: 540px; font-size: 19px; font-style: italic;
+      color: var(--muted); line-height: 1.85;
+      opacity: 0; animation: fadeUp 1s ease 1.6s forwards;
+    }
+    .hero-cta {
+      display: inline-block; margin-top: 52px; padding: 16px 52px;
+      background: var(--fire-2); font-family: 'Cinzel', serif;
+      font-size: 11px; letter-spacing: .4em; text-transform: uppercase;
+      color: var(--text); text-decoration: none; transition: all .35s;
+      box-shadow: 0 0 25px rgba(192,57,43,.35), 0 0 60px rgba(232,84,26,.15);
+      opacity: 0; animation: fadeUp 1s ease 1.9s forwards;
+    }
+    .hero-cta:hover {
+      background: var(--fire-1);
+      box-shadow: 0 0 40px rgba(232,84,26,.55), 0 0 80px rgba(255,107,53,.25);
+      transform: translateY(-1px);
+    }
+    .hero-handle {
+      margin-top: 16px; font-family: 'Cinzel', serif;
+      font-size: 10px; letter-spacing: .3em; color: var(--muted);
+      opacity: 0; animation: fadeIn 1s ease 2.1s forwards;
+    }
+    .scroll-hint {
+      position: absolute; bottom: 80px; left: 50%; transform: translateX(-50%);
+      display: flex; flex-direction: column; align-items: center; gap: 8px;
+      opacity: 0; animation: fadeIn 1s ease 2.5s forwards;
+    }
+    .scroll-hint span {
+      font-family: 'Cinzel', serif; font-size: 8px; letter-spacing: .5em;
+      color: var(--muted); text-transform: uppercase; opacity: .5;
+    }
+    .scroll-line {
+      width: 1px; height: 48px;
+      background: linear-gradient(to bottom, var(--fire-2), transparent);
+      animation: scrollPulse 2.5s ease infinite;
+    }
+
+    /* ── SECTIONS ── */
+    .section-wrap {
+      position: relative; z-index: 10; max-width: 1100px;
+      margin: 0 auto; padding: 100px 60px;
+    }
+    .section-label {
+      font-family: 'Cinzel', serif; font-size: 9px;
+      letter-spacing: .55em; text-transform: uppercase; color: var(--fire-2);
+      margin-bottom: 20px; display: flex; align-items: center; gap: 16px;
+    }
+    .section-label::after {
+      content: ''; flex: 1; height: 1px;
+      background: linear-gradient(to right, var(--blood), transparent);
+    }
+    .section-title {
+      font-family: 'Cinzel Decorative', serif;
+      font-size: clamp(26px, 3.5vw, 44px);
+      color: var(--text); margin-bottom: 56px; line-height: 1.2;
+    }
+
+    /* ── ORNAMENT ── */
+    .ornament {
+      display: flex; align-items: center; justify-content: center;
+      gap: 18px; padding: 48px 0; position: relative; z-index: 10; opacity: .2;
+    }
+    .ornament-line { width: 100px; height: 1px; background: linear-gradient(to right, transparent, var(--fire-1)); }
+    .ornament-line.r { background: linear-gradient(to left, transparent, var(--fire-1)); }
+    .ornament-dot { width: 4px; height: 4px; background: var(--fire-2); transform: rotate(45deg); }
+
+    /* ── SERVICES ── */
+    .service-num {
+      font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: .3em;
+      color: var(--fire-2); opacity: .7;
+    }
+    .service-title {
+      font-family: 'Cinzel Decorative', serif; font-size: 17px;
+      color: var(--text); line-height: 1.3;
+    }
+    .service-desc { font-size: 15.5px; color: var(--muted); line-height: 1.85; }
+
+    /* Symbol silhouette behind each item */
+    .item-symbol {
+      position: absolute; pointer-events: none; z-index: 0;
+      opacity: 0.055;
+    }
+    .item-symbol svg { width: 100%; height: 100%; }
+
+    /* Flagship */
+    .service-flagship {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 64px;
+      padding: 52px 40px 52px 40px;
+      background: #111111;
+      border-top: 1px solid rgba(192,57,43,.4);
+      border-bottom: 1px solid rgba(192,57,43,.15);
+      position: relative; margin-bottom: 3px;
+      overflow: hidden;
+      transition: background .4s;
+    }
+    .service-flagship::before {
+      content: ''; position: absolute;
+      left: 0; top: 0; bottom: 0; width: 2px;
+      background: linear-gradient(to bottom, var(--fire-2), var(--fire-1), transparent);
+      box-shadow: 0 0 14px rgba(192,57,43,.5);
+    }
+    .service-flagship:hover { background: #151515; }
+    .service-flagship .item-symbol {
+      right: 5%; top: 50%; transform: translateY(-50%);
+      width: 210px; height: 210px;
+    }
+
+    .flagship-left {
+      display: flex; flex-direction: column; justify-content: center;
+      position: relative; z-index: 1;
+    }
+    .flagship-num {
+      font-family: 'Cinzel', serif; font-size: 11px; letter-spacing: .3em;
+      color: var(--fire-2); opacity: .5; margin-bottom: 14px;
+    }
+    .flagship-title {
+      font-family: 'Cinzel Decorative', serif;
+      font-size: clamp(22px, 2.5vw, 32px);
+      color: var(--text); line-height: 1.2;
+    }
+    .flagship-right {
+      display: flex; align-items: center;
+      position: relative; z-index: 1;
+    }
+    .flagship-right .service-desc { font-size: 17px; }
+
+    /* Secondary list */
+    .service-list-item {
+      display: grid; grid-template-columns: 52px 1fr;
+      align-items: start; gap: 32px;
+      padding: 28px 40px 28px 40px;
+      background: #111111;
+      border-bottom: 1px solid rgba(192,57,43,.1);
+      position: relative; overflow: hidden;
+      transition: background .3s, border-color .3s;
+      margin-bottom: 3px;
+    }
+    .service-list-item:last-child { margin-bottom: 0; }
+    .service-list-item:hover {
+      background: #151515;
+      border-bottom-color: rgba(192,57,43,.25);
+    }
+    .service-list-item .item-symbol {
+      right: 3%; top: 50%; transform: translateY(-50%);
+      width: 110px; height: 110px;
+    }
+    .list-item-num {
+      font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: .3em;
+      color: var(--fire-2); opacity: .55; padding-top: 3px;
+      position: relative; z-index: 1;
+    }
+    .list-item-body { position: relative; z-index: 1; }
+    .list-item-title {
+      font-family: 'Cinzel Decorative', serif; font-size: 18px;
+      color: var(--text); margin-bottom: 10px; line-height: 1.25;
+    }
+    .list-item-desc { font-size: 15px; color: var(--muted); line-height: 1.8; }
+
+    /* ── ABOUT ── */
+    .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center; }
+    .about-frame {
+      width: 100%; aspect-ratio: 3/4; background: var(--dark-3);
+      border: 1px solid rgba(192,57,43,.2); position: relative; overflow: hidden;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .about-frame::after {
+      content: ''; position: absolute; inset: 0; z-index: 1;
+      background: linear-gradient(to top, rgba(8,6,8,.55) 0%, transparent 50%);
+      pointer-events: none;
+    }
+    .corner {
+      position: absolute; width: 18px; height: 18px;
+      border-color: var(--fire-2); border-style: solid; border-width: 0; z-index: 1;
+    }
+    .corner.tl { top: -1px; left: -1px;   border-top-width: 2px;    border-left-width: 2px; }
+    .corner.tr { top: -1px; right: -1px;  border-top-width: 2px;    border-right-width: 2px; }
+    .corner.bl { bottom: -1px; left: -1px;  border-bottom-width: 2px; border-left-width: 2px; }
+    .corner.br { bottom: -1px; right: -1px; border-bottom-width: 2px; border-right-width: 2px; }
+    .about-text p {
+      margin-bottom: 22px; color: var(--muted); font-size: 17px; line-height: 1.85;
+    }
+    .about-text p strong { color: var(--text); font-weight: 500; }
+    .about-text p:last-child { margin-bottom: 0; }
+
+    /* ── ABOUT STORY BLOCKS ── */
+    .about-story {
+      margin-top: 72px;
+      padding-top: 56px;
+      border-top: 1px solid rgba(201,168,76,0.1);
+    }
+    .about-block {
+      margin-bottom: 52px;
+      padding-left: 28px;
+      border-left: 1px solid rgba(201,168,76,0.18);
+      position: relative;
+    }
+    .about-block::before {
+      content: '';
+      position: absolute;
+      left: -4px; top: 8px;
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: rgba(201,168,76,0.35);
+    }
+    .about-block-label {
+      font-family: 'Cinzel', serif;
+      font-size: 10px;
+      letter-spacing: 0.5em;
+      text-transform: uppercase;
+      color: #c9a84c;
+      opacity: 0.7;
+      margin-bottom: 10px;
+    }
+    .about-block-title {
+      font-family: 'Cinzel', serif;
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 20px;
+      line-height: 1.3;
+    }
+    .about-block-body {
+      color: var(--muted);
+      font-size: 17px;
+      line-height: 1.85;
+      max-width: 680px;
+    }
+    .about-block-body p { margin-bottom: 18px; }
+    .about-block-body p:last-child { margin-bottom: 0; }
+    .about-block-body em { color: #c8bba8; font-style: italic; }
+    .about-quote {
+      margin: 20px 0;
+      padding: 14px 18px;
+      border-left: 2px solid rgba(201,168,76,0.4);
+      font-style: italic;
+      font-size: 17px;
+      color: #c8bba8;
+      background: rgba(255,255,255,0.025);
+      border-radius: 0 6px 6px 0;
+    }
+    .about-story-divider {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 44px 0;
+      opacity: 0.18;
+    }
+    .about-story-divider-line { flex: 1; height: 0.5px; background: #c9a84c; }
+    .about-story-divider-dot { width: 3px; height: 3px; border-radius: 50%; background: #c9a84c; }
+
+    /* ── CONTACT ── */
+    .contact-wrap {
+      position: relative; z-index: 10; text-align: center; padding: 100px 40px 180px;
+    }
+    .contact-label {
+      font-family: 'Cinzel', serif; font-size: 9px;
+      letter-spacing: .55em; text-transform: uppercase; color: var(--fire-2);
+      margin-bottom: 20px; display: flex; align-items: center; justify-content: center; gap: 16px;
+    }
+    .contact-label::before { content: ''; width: 80px; height: 1px; background: linear-gradient(to left, var(--blood), transparent); }
+    .contact-label::after  { content: ''; width: 80px; height: 1px; background: linear-gradient(to right, var(--blood), transparent); }
+    .contact-title {
+      font-family: 'Cinzel Decorative', serif;
+      font-size: clamp(26px, 3.5vw, 44px); color: var(--text); margin-bottom: 20px;
+    }
+    .contact-desc { max-width: 460px; margin: 0 auto 44px; font-style: italic; color: var(--muted); font-size: 17px; }
+    .tg-btn {
+      display: inline-flex; align-items: center; gap: 14px; padding: 18px 56px;
+      background: var(--fire-2); font-family: 'Cinzel', serif;
+      font-size: 11px; letter-spacing: .4em; text-transform: uppercase;
+      color: var(--text); text-decoration: none; transition: all .35s;
+      box-shadow: 0 0 30px rgba(192,57,43,.35), 0 0 70px rgba(232,84,26,.15);
+    }
+    .tg-btn:hover {
+      background: var(--fire-1);
+      box-shadow: 0 0 50px rgba(232,84,26,.55), 0 0 100px rgba(255,107,53,.25);
+      transform: translateY(-2px);
+    }
+    .tg-handle { margin-top: 20px; font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: .3em; color: var(--muted); opacity: .5; }
+
+    .contact-btns {
+      display: flex; align-items: center; justify-content: center;
+      gap: 16px; flex-wrap: wrap;
+    }
+    .tg-btn-secondary {
+      display: inline-flex; align-items: center; gap: 12px;
+      padding: 17px 36px;
+      background: transparent;
+      border: 1px solid rgba(192,57,43,.4);
+      font-family: 'Cinzel', serif;
+      font-size: 11px; letter-spacing: .4em; text-transform: uppercase;
+      color: var(--muted); text-decoration: none; transition: all .35s;
+    }
+    .tg-btn-secondary:hover {
+      border-color: var(--fire-2);
+      color: var(--text);
+      background: rgba(192,57,43,.07);
+    }
+
+    @media (max-width: 768px) {
+      .contact-btns { flex-direction: column; gap: 12px; }
+      .tg-btn-secondary { padding: 15px 28px; }
+    }
+
+    /* ── OCCULT BOTTOM ── */
+    .occult-bottom {
+      position: relative; width: 100%; height: 280px;
+      overflow: hidden; z-index: 10;
+      background: var(--dark);
+    }
+    .occult-bottom-img {
+      position: absolute; inset: 0;
+      width: 100%; height: 100%;
+      object-fit: cover; object-position: center 40%;
+      opacity: 0.22;
+      mix-blend-mode: screen;
+      filter: grayscale(1) contrast(1.1);
+    }
+    .occult-bottom-fade-top {
+      position: absolute; top: 0; left: 0; right: 0; height: 120px;
+      background: linear-gradient(to bottom, var(--dark) 0%, transparent 100%);
+      z-index: 2; pointer-events: none;
+    }
+    .occult-bottom-fade-bot {
+      position: absolute; bottom: 0; left: 0; right: 0; height: 90px;
+      background: linear-gradient(to top, #040203 0%, transparent 100%);
+      z-index: 2; pointer-events: none;
+    }
+
+    /* ── ABOUT PORTRAIT ── */
+    .about-frame img {
+      position: absolute; inset: 0;
+      width: 100%; height: 100%;
+      object-fit: cover; object-position: center top;
+      display: block; z-index: 0;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      position: relative; z-index: 10; text-align: center; padding: 20px 40px 28px;
+      background: #040203;
+      font-family: 'Cinzel', serif; font-size: 9px; letter-spacing: .35em;
+      color: var(--muted); opacity: .35;
+    }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeIn  { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes fadeUp  { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes scrollPulse { 0%,100% { opacity: .25; } 50% { opacity: .8; } }
+    @keyframes ambPulse { 0%,100% { opacity: .025; } 50% { opacity: .04; } }
+
+    .reveal { opacity: 0; transform: translateY(18px); transition: opacity .7s ease, transform .7s ease; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    @media (max-width: 768px) {
+      nav { padding: 18px 20px; }
+      .nav-logo-name { font-size: 11px; letter-spacing: .15em; }
+
+      .section-wrap { padding: 60px 20px; }
+      .hero { padding: 100px 20px 140px; }
+      .hero-subtitle { font-size: 10px; letter-spacing: .3em; }
+
+      /* About */
+      .about-grid { grid-template-columns: 1fr; gap: 32px; }
+      .about-frame { display: none; }
+      .about-block-body { max-width: 100%; }
+      .about-story { margin-top: 48px; padding-top: 40px; }
+
+      /* Services — flagship: collapse to single column */
+      .service-flagship {
+        grid-template-columns: 1fr;
+        gap: 24px;
+        padding: 32px 20px;
+      }
+      .service-flagship .item-symbol { display: none; }
+
+      /* Services — list items: tighter padding, smaller number column */
+      .service-list-item {
+        grid-template-columns: 36px 1fr;
+        gap: 16px;
+        padding: 22px 20px;
+      }
+      .service-list-item .item-symbol { display: none; }
+      .list-item-title { font-size: 16px; }
+      .list-item-desc  { font-size: 14px; }
+      .flagship-title  { font-size: 22px; }
+      .flagship-right .service-desc { font-size: 15px; }
+
+      .contact-wrap { padding: 70px 20px 140px; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="ambient ambient-1"></div>
+<div class="ambient ambient-2"></div>
+
+<!-- ══ NAV ══════════════════════════════════════════════ -->
+<nav>
+  <a href="#" class="nav-logo">
+    <svg width="38" height="38" viewBox="0 0 120 120" fill="none">
+      <circle cx="60" cy="60" r="56" stroke="#C0392B" stroke-width="0.8" opacity="0.4"/>
+      <circle cx="60" cy="60" r="44" stroke="#C0392B" stroke-width="0.5" opacity="0.2"/>
+      <path d="M60,12 L80.83,103.25 L22.47,30.07 L106.80,70.68 L13.20,70.68 L97.53,30.07 L39.17,103.25 Z"
+            stroke="#E8541A" stroke-width="1.1" fill="none" opacity="0.9"
+            style="filter:drop-shadow(0 0 4px rgba(232,84,26,.6))"/>
+      <circle cx="60" cy="60" r="6" fill="#C0392B" opacity="0.65"
+              style="filter:drop-shadow(0 0 5px rgba(192,57,43,.8))"/>
+    </svg>
+    <div class="nav-logo-text">
+      <span class="nav-logo-name">Antony Seven</span>
+      <span class="nav-logo-sub">
+        <span class="ru">Колдун</span><span class="en" style="display:none">Sorcerer</span>
+      </span>
+    </div>
+  </a>
+  <div class="lang-toggle">
+    <button class="lang-btn active" onclick="setLang('ru')">RU</button>
+    <span class="lang-sep">/</span>
+    <button class="lang-btn" onclick="setLang('en')">EN</button>
+  </div>
+</nav>
+
+<!-- ══ HERO ═════════════════════════════════════════════ -->
+<section class="hero">
+  <div class="sigil">
+    <svg viewBox="0 0 120 120" fill="none">
+      <circle cx="60" cy="60" r="56" stroke="#C0392B" stroke-width="0.8" opacity="0.35"/>
+      <circle cx="60" cy="60" r="44" stroke="#C0392B" stroke-width="0.5" opacity="0.2"/>
+      <circle cx="60" cy="60" r="30" stroke="#C0392B" stroke-width="0.4" opacity="0.12"/>
+      <path d="M60,12 L80.83,103.25 L22.47,30.07 L106.80,70.68 L13.20,70.68 L97.53,30.07 L39.17,103.25 Z"
+            stroke="#E8541A" stroke-width="1.2" fill="none"
+            style="filter:drop-shadow(0 0 6px rgba(232,84,26,.7))"/>
+      <text x="60" y="68" text-anchor="middle" font-family="Georgia,serif"
+            font-size="16" font-style="italic" fill="#D4C8B8" opacity="0.9" letter-spacing="3">VII</text>
+    </svg>
+  </div>
+
+  <p class="hero-eyebrow">
+    <span class="ru">Оккультизм · Ритуальная практика · Обучение</span>
+    <span class="en" style="display:none">Occultism · Ritual Practice · Teaching</span>
+  </p>
+  <h1 class="hero-title">Antony Seven</h1>
+  <p class="hero-subtitle">
+    <span class="ru">Колдун · Учитель · Проводник</span>
+    <span class="en" style="display:none">Sorcerer · Teacher · Guide</span>
+  </p>
+  <div class="hero-divider"></div>
+  <p class="hero-desc">
+    <span class="ru">За пределами видимого мира существуют силы, законы и пути. Я помогу вам их увидеть — и научу с ними работать.</span>
+    <span class="en" style="display:none">Beyond the visible world exist forces, laws, and pathways. I will help you perceive them — and teach you to work with them.</span>
+  </p>
+  <a href="https://t.me/Antony_Seven" class="hero-cta" target="_blank" rel="noopener">
+    <span class="ru">Написать в Telegram</span>
+    <span class="en" style="display:none">Write on Telegram</span>
+  </a>
+  <p class="hero-handle">@Antony_Seven</p>
+  <div class="scroll-hint">
+    <span class="ru">далее</span>
+    <span class="en" style="display:none">scroll</span>
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+<!-- ══ ABOUT ═════════════════════════════════════════════ -->
+<div id="about" class="section-wrap" style="padding-bottom:120px;">
+  <div class="section-label reveal">
+    <span class="ru">О мастере</span>
+    <span class="en" style="display:none">About</span>
+  </div>
+  <div class="about-grid">
+    <div class="reveal">
+      <div class="about-frame">
+        <img src="images/ava.jpg" alt="Antony Seven"/>
+        <div class="corner tl"></div><div class="corner tr"></div>
+        <div class="corner bl"></div><div class="corner br"></div>
+      </div>
+    </div>
+    <div class="about-text">
+      <h2 class="section-title reveal" style="margin-bottom:24px;">Antony Seven</h2>
+      <p class="reveal">
+        <span class="ru">Меня зовут Антон, мне 31 год. Практикую с 18-ти лет — после дедовского наставления и посвящения. Дед был человеком суровым, с людьми не церемонился. Многие обижались на него за <em>«плохие сбывшиеся предсказания»</em>.</span>
+        <span class="en" style="display:none">My name is Anton, I am 31 years old. I have been practicing since the age of 18, following my grandfather's initiation and instruction. He was a stern man who spared nobody's feelings — and many held grudges against him for <em>grim predictions that came to pass.</em></span>
+      </p>
+      <p class="reveal">
+        <span class="ru"><strong>Обучение</strong> — одно из главных направлений моей работы. Я передаю не набор техник, а способ видения и понимания устройства невидимого мира.</span>
+        <span class="en" style="display:none"><strong>Teaching</strong> is one of the primary directions of my work. I pass on not a set of techniques, but a way of seeing and understanding the structure of the invisible world.</span>
+      </p>
+      <p class="reveal">
+        <span class="ru">Работаю индивидуально. Принимаю не всех — сначала беседа.</span>
+        <span class="en" style="display:none">I work individually. I do not accept everyone — a preliminary conversation comes first.</span>
+      </p>
+    </div>
+  </div>
+
+  <!-- ── ABOUT STORY ── -->
+  <div class="about-story">
+
+    <!-- История -->
+    <div class="about-block reveal">
+      <div class="about-block-label">
+        <span class="ru">История</span>
+        <span class="en" style="display:none">Origin</span>
+      </div>
+      <div class="about-block-title">
+        <span class="ru">Путь, переданный по роду</span>
+        <span class="en" style="display:none">A path passed through blood</span>
+      </div>
+      <div class="about-block-body">
+        <p>
+          <span class="ru">Меня зовут Антон, мне 31 год. Практикую с 18-ти лет — после дедовского наставления и посвящения. Дед был человеком суровым, с людьми не церемонился. Многие обижались на него за <em>«плохие сбывшиеся предсказания»</em>.</span>
+          <span class="en" style="display:none">My name is Anton, I am 31 years old. I have been practicing since the age of 18, following my grandfather's initiation and instruction. He was a stern man who spared nobody's feelings — and many held grudges against him for <em>grim predictions that came to pass.</em></span>
+        </p>
+        <blockquote class="about-quote">
+          <span class="ru">«Не в атрибутах сила.»</span>
+          <span class="en" style="display:none">"The power is not in the tools."</span>
+        </blockquote>
+        <p>
+          <span class="ru">На его рабочем столе всегда лежал кинжал ручной работы, стояли подсвечники с иглой. Коробки со свечами, травами, воском — вот и все атрибуты. Многое он объяснял прямо на кладбище, пока мы ходили между могил. Меня отправлял во все места, где нужно было набираться опыта: леса, горы, перекрёстки, кладбища, озёра, церковь.</span>
+          <span class="en" style="display:none">On his desk there was always a handmade dagger, candlesticks with a needle. Boxes of candles, herbs, wax — those were all his tools. Much of what he taught, he explained while we walked among the graves. He sent me to every place where experience had to be earned: forests, mountains, crossroads, cemeteries, lakes, a church.</span>
+        </p>
+        <p>
+          <span class="ru">Когда он шёл по погосту, всё время с кем-то разговаривал. Я спрашивал: <em>«Ты что там, с мёртвыми беседуешь?»</em> Он отвечал неизменно: <em>«Ай, окрепнешь, поболее узнаешь да поймёшь. Ты лучше запоминай, что объясняю.»</em> Тогда я не понимал. Теперь понимаю: он разговаривал со своим бесом-помощником. Это открылось, когда у меня появился свой.</span>
+          <span class="en" style="display:none">Walking through the cemetery, he was forever talking to someone. I would ask: <em>"Are you speaking with the dead?"</em> He would always answer the same way: <em>"Grow stronger, learn more — you'll understand. Better remember what I'm teaching you."</em> I didn't understand then. Now I do: he was speaking with his familiar spirit. It became clear once I had one of my own.</span>
+        </p>
+      </div>
+    </div>
+
+    <div class="about-story-divider">
+      <div class="about-story-divider-line"></div>
+      <div class="about-story-divider-dot"></div>
+      <div class="about-story-divider-dot"></div>
+      <div class="about-story-divider-dot"></div>
+      <div class="about-story-divider-line"></div>
+    </div>
+
+    <!-- Практика -->
+    <div class="about-block reveal">
+      <div class="about-block-label">
+        <span class="ru">Практика</span>
+        <span class="en" style="display:none">Practice</span>
+      </div>
+      <div class="about-block-title">
+        <span class="ru">Как я работаю</span>
+        <span class="en" style="display:none">How I work</span>
+      </div>
+      <div class="about-block-body">
+        <p>
+          <span class="ru">Дар был дан Силами. Дед — лишь проводник по Роду и наставник. Учил и <em>«лечить»</em>, и <em>«калечить»</em>, направлял в нужное русло. Его правило было жёстким:</span>
+          <span class="en" style="display:none">The gift was given by the Forces. My grandfather was only a guide through the lineage and a teacher. He taught both <em>to heal</em> and <em>to harm</em>, steering me where I needed to go. His rule was uncompromising:</span>
+        </p>
+        <blockquote class="about-quote">
+          <span class="ru">«Пока на себе все ритуалы не попробуешь — никаких просьб от людей не принимай.»</span>
+          <span class="en" style="display:none">"Until you have tried every ritual on yourself — accept no requests from others."</span>
+        </blockquote>
+        <p>
+          <span class="ru">Посвящений у меня несколько: допуск к работе с Бесами и Демонами, с мёртвыми. В качестве мантики использую маятники, таро, классические колоды. Порой смотрю просто через беса — без атрибутов.</span>
+          <span class="en" style="display:none">I hold several initiations: access to work with spirits and Demons, and with the dead. For divination I use pendulums, tarot, and classical card decks. At times I simply look through my familiar — no tools at all.</span>
+        </p>
+        <p>
+          <span class="ru">Часто сталкиваюсь с тем, что люди принимают меня за Высшие Силы — но это не так. <em>Я посредник между живыми и Высшими Силами.</em> Те, кто обращается ко мне, уже знают: если я взялся — значит, проблему решу.</span>
+          <span class="en" style="display:none">People often mistake me for the Higher Forces themselves — but that is not so. <em>I am an intermediary between the living and the Higher Forces.</em> Those who come to me already know: if I take on a matter, it will be resolved.</span>
+        </p>
+      </div>
+    </div>
+
+    <div class="about-story-divider">
+      <div class="about-story-divider-line"></div>
+      <div class="about-story-divider-dot"></div>
+      <div class="about-story-divider-dot"></div>
+      <div class="about-story-divider-dot"></div>
+      <div class="about-story-divider-line"></div>
+    </div>
+
+    <!-- Принципы -->
+    <div class="about-block reveal">
+      <div class="about-block-label">
+        <span class="ru">Принципы</span>
+        <span class="en" style="display:none">Principles</span>
+      </div>
+      <div class="about-block-title">
+        <span class="ru">Родовая книга и путь развития</span>
+        <span class="en" style="display:none">The family grimoire and the path of growth</span>
+      </div>
+      <div class="about-block-body">
+        <p>
+          <span class="ru">Ритуалы, которые я использую, взяты только из родовой книги либо написаны и отработаны мной лично. Никаких заимствованных схем. Отклик от людей хороший.</span>
+          <span class="en" style="display:none">The rituals I use are drawn solely from the family grimoire, or written and proven by my own hand. No borrowed schemes. The response from people has been strong.</span>
+        </p>
+        <p>
+          <span class="ru">Колдовство — вещь тонкая. <em>Век живём — век учимся.</em> Нарабатываем и всегда развиваемся.</span>
+          <span class="en" style="display:none">Sorcery is a subtle craft. <em>We learn all our lives.</em> We build, and we always keep growing.</span>
+        </p>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<div class="ornament">
+  <div class="ornament-line"></div>
+  <div class="ornament-dot"></div>
+  <div class="ornament-dot" style="opacity:.5;transform:rotate(45deg) scale(.5)"></div>
+  <div class="ornament-dot"></div>
+  <div class="ornament-line r"></div>
+</div>
+
+<!-- ══ SERVICES ══════════════════════════════════════════ -->
+<div id="services" class="section-wrap">
+  <div class="section-label reveal">
+    <span class="ru">Что я делаю</span>
+    <span class="en" style="display:none">What I Do</span>
+  </div>
+  <h2 class="section-title reveal">
+    <span class="ru">Направления работы</span>
+    <span class="en" style="display:none">Areas of Work</span>
+  </h2>
+  <!-- ── FLAGSHIP: Обучение ── -->
+  <div class="service-flagship reveal">
+
+    <!-- Heptagram silhouette -->
+    <div class="item-symbol" aria-hidden="true">
+      <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="50" cy="50" r="46" stroke="white" stroke-width="0.7"/>
+        <circle cx="50" cy="50" r="36" stroke="white" stroke-width="0.35"/>
+        <path d="M50,4 L70,91.5 L14,21.3 L94.9,60.2 L5.1,60.2 L86,21.3 L30,91.5 Z"
+              stroke="white" stroke-width="1"/>
+        <circle cx="50" cy="50" r="5" fill="white" opacity="0.5"/>
+        <circle cx="50" cy="50" r="9" stroke="white" stroke-width="0.4"/>
+      </svg>
+    </div>
+
+    <div class="flagship-left">
+      <div class="flagship-num">01</div>
+      <h3 class="flagship-title">
+        <span class="ru">Обучение оккультизму</span>
+        <span class="en" style="display:none">Occult Instruction</span>
+      </h3>
+    </div>
+    <div class="flagship-right">
+      <p class="service-desc">
+        <span class="ru">Системное погружение в традицию — от первых шагов до самостоятельной работы. Церемониальная магия, хаос-магия, работа с сигилами, сущностями и символическими системами. Каждый ученик получает индивидуальный путь, выстроенный под его природу и задачи.</span>
+        <span class="en" style="display:none">Systematic immersion into tradition — from first steps to independent work. Ceremonial magic, chaos magic, sigils, entities, and symbolic systems. Each student receives an individual path, built around their nature and goals.</span>
+      </p>
+    </div>
+  </div>
+
+  <!-- ── Secondary list ── -->
+  <div class="service-list">
+
+    <div class="service-list-item reveal">
+      <!-- Pentagram silhouette -->
+      <div class="item-symbol" aria-hidden="true">
+        <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="50" cy="50" r="46" stroke="white" stroke-width="0.7"/>
+          <path d="M50,4 L77,87.2 L6.3,35.8 L93.7,35.8 L22.9,87.2 Z"
+                stroke="white" stroke-width="1"/>
+        </svg>
+      </div>
+      <span class="list-item-num">02</span>
+      <div class="list-item-body">
+        <h3 class="list-item-title">
+          <span class="ru">Ритуальная работа</span>
+          <span class="en" style="display:none">Ritual Work</span>
+        </h3>
+        <p class="list-item-desc">
+          <span class="ru">Индивидуальные практики с учётом вашей ситуации. Работа с намерением, пространством и силами за пределами обыденного.</span>
+          <span class="en" style="display:none">Individual practices tailored to your situation. Working with intention, space, and forces that lie beyond the ordinary.</span>
+        </p>
+      </div>
+    </div>
+
+    <div class="service-list-item reveal">
+      <!-- Eye of Providence silhouette -->
+      <div class="item-symbol" aria-hidden="true">
+        <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <polygon points="50,6 93,84 7,84" stroke="white" stroke-width="0.9"/>
+          <ellipse cx="50" cy="58" rx="16" ry="8.5" stroke="white" stroke-width="0.7"/>
+          <circle cx="50" cy="58" r="4.5" stroke="white" stroke-width="0.6"/>
+          <circle cx="50" cy="58" r="1.5" fill="white" opacity="0.6"/>
+          <line x1="50" y1="10" x2="50" y2="49.5" stroke="white" stroke-width="0.35"/>
+          <line x1="88" y1="80" x2="67" y2="64" stroke="white" stroke-width="0.35"/>
+          <line x1="12" y1="80" x2="33" y2="64" stroke="white" stroke-width="0.35"/>
+        </svg>
+      </div>
+      <span class="list-item-num">03</span>
+      <div class="list-item-body">
+        <h3 class="list-item-title">
+          <span class="ru">Консультация</span>
+          <span class="en" style="display:none">Consultation</span>
+        </h3>
+        <p class="list-item-desc">
+          <span class="ru">Разбор ситуации через призму скрытых механизмов. Диагностика, понимание причин и указание возможных путей.</span>
+          <span class="en" style="display:none">Analysis of your situation through the lens of hidden mechanisms. Diagnostics, understanding causes, and pointing toward possible paths.</span>
+        </p>
+      </div>
+    </div>
+
+    <div class="service-list-item reveal">
+      <!-- Solar cross / protective circle silhouette -->
+      <div class="item-symbol" aria-hidden="true">
+        <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="50" cy="50" r="46" stroke="white" stroke-width="0.7"/>
+          <circle cx="50" cy="50" r="24" stroke="white" stroke-width="0.5"/>
+          <circle cx="50" cy="50" r="4" fill="white" opacity="0.5"/>
+          <line x1="50" y1="4" x2="50" y2="96" stroke="white" stroke-width="0.8"/>
+          <line x1="4" y1="50" x2="96" y2="50" stroke="white" stroke-width="0.8"/>
+          <line x1="17" y1="17" x2="83" y2="83" stroke="white" stroke-width="0.4"/>
+          <line x1="83" y1="17" x2="17" y2="83" stroke="white" stroke-width="0.4"/>
+        </svg>
+      </div>
+      <span class="list-item-num">04</span>
+      <div class="list-item-body">
+        <h3 class="list-item-title">
+          <span class="ru">Работа с пространством</span>
+          <span class="en" style="display:none">Space Work</span>
+        </h3>
+        <p class="list-item-desc">
+          <span class="ru">Очищение и настройка места. Устранение нежелательных влияний, создание защитного контура и гармонизация среды обитания.</span>
+          <span class="en" style="display:none">Cleansing and tuning of a place. Removal of unwanted influences, creation of protective boundaries and harmonisation of living space.</span>
+        </p>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══ CONTACT ════════════════════════════════════════════ -->
+<div id="contact" class="contact-wrap">
+  <div class="contact-label reveal">
+    <span class="ru">Связь</span>
+    <span class="en" style="display:none">Contact</span>
+  </div>
+  <h2 class="contact-title reveal">
+    <span class="ru">Начать диалог</span>
+    <span class="en" style="display:none">Begin a Dialogue</span>
+  </h2>
+  <p class="contact-desc reveal">
+    <span class="ru">Если вы чувствуете, что готовы — напишите. Первый шаг всегда за вами.</span>
+    <span class="en" style="display:none">If you feel ready — write. The first step is always yours.</span>
+  </p>
+  <div class="contact-btns reveal">
+    <a href="https://t.me/Antony_Seven" class="tg-btn" target="_blank" rel="noopener">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" opacity="0.7">
+        <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/>
+      </svg>
+      <span class="ru">Написать в Telegram</span>
+      <span class="en" style="display:none">Write on Telegram</span>
+    </a>
+    <a href="https://t.me/zigmundseven" class="tg-btn-secondary" target="_blank" rel="noopener">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.6">
+        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+      </svg>
+      <span class="ru">Отзывы</span>
+      <span class="en" style="display:none">Reviews</span>
+    </a>
+  </div>
+  <p class="tg-handle reveal">@Antony_Seven</p>
+</div>
+
+<!-- ══ OCCULT BOTTOM ══════════════════════════════════════ -->
+<div class="occult-bottom">
+  <img class="occult-bottom-img" src="images/fon.png" alt="" aria-hidden="true"/>
+  <div class="occult-bottom-fade-top"></div>
+  <div class="occult-bottom-fade-bot"></div>
+</div>
+
+<!-- ══ FOOTER ════════════════════════════════════════════ -->
+<footer>© 2025 Antony Seven · All Rights Reserved</footer>
+
+<script>
+// ── LANG TOGGLE ─────────────────────────────────────────
+function setLang(lang) {
+  document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+  document.querySelector(`.lang-btn[onclick="setLang('${lang}')"]`).classList.add('active');
+  document.querySelectorAll('.ru').forEach(el => el.style.display = lang === 'ru' ? '' : 'none');
+  document.querySelectorAll('.en').forEach(el => el.style.display = lang === 'en' ? '' : 'none');
+}
+
+// ── SCROLL REVEAL ────────────────────────────────────────
+const io = new IntersectionObserver(
+  entries => entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); }),
+  { threshold: 0.1 }
+);
+document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+</script>
+</body>
+</html>
