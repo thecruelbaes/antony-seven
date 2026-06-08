@@ -88,16 +88,17 @@
     .hero {
       position: relative; min-height: 100vh;
       display: flex; flex-direction: column; align-items: center; justify-content: center;
-      text-align: center; padding: 120px 40px 180px; z-index: 10;
+      text-align: center; padding: 80px 40px 100px; z-index: 10;
     }
     .sigil {
-      width: 110px; height: 110px; margin-bottom: 40px;
+      width: 220px; height: 220px; margin-bottom: 15px;
       opacity: 0; animation: fadeIn 2s ease .5s forwards;
     }
+    .sigil img { width: 100%; height: 100%; object-fit: contain; }
     .hero-eyebrow {
       font-family: 'Cinzel', serif; font-size: 10px;
       letter-spacing: .55em; text-transform: uppercase; color: var(--fire-2);
-      margin-bottom: 20px; opacity: 0; animation: fadeUp 1s ease .8s forwards;
+      margin-bottom: 12px; opacity: 0; animation: fadeUp 1s ease .8s forwards;
     }
     .hero-title {
       font-family: 'Cinzel Decorative', serif;
@@ -109,12 +110,12 @@
     .hero-subtitle {
       font-family: 'Cinzel', serif; font-size: clamp(11px, 1.5vw, 14px);
       letter-spacing: .5em; color: var(--muted); text-transform: uppercase;
-      margin-bottom: 44px; opacity: 0; animation: fadeUp 1s ease 1.2s forwards;
+      margin-bottom: 24px; opacity: 0; animation: fadeUp 1s ease 1.2s forwards;
     }
     .hero-divider {
-      width: 1px; height: 70px;
+      width: 1px; height: 44px;
       background: linear-gradient(to bottom, transparent, var(--fire-2), transparent);
-      margin: 0 auto 44px; opacity: 0; animation: fadeIn 1s ease 1.4s forwards;
+      margin: 0 auto 24px; opacity: 0; animation: fadeIn 1s ease 1.4s forwards;
     }
     .hero-desc {
       max-width: 540px; font-size: 19px; font-style: italic;
@@ -122,7 +123,7 @@
       opacity: 0; animation: fadeUp 1s ease 1.6s forwards;
     }
     .hero-cta {
-      display: inline-block; margin-top: 52px; padding: 16px 52px;
+      display: inline-block; margin-top: 32px; padding: 16px 52px;
       background: var(--fire-2); font-family: 'Cinzel', serif;
       font-size: 11px; letter-spacing: .4em; text-transform: uppercase;
       color: var(--text); text-decoration: none; transition: all .35s;
@@ -157,7 +158,7 @@
     /* ── SECTIONS ── */
     .section-wrap {
       position: relative; z-index: 10; max-width: 1100px;
-      margin: 0 auto; padding: 100px 60px;
+      margin: 0 auto; padding: 70px 60px;
     }
     .section-label {
       font-family: 'Cinzel', serif; font-size: 9px;
@@ -171,13 +172,13 @@
     .section-title {
       font-family: 'Cinzel Decorative', serif;
       font-size: clamp(26px, 3.5vw, 44px);
-      color: var(--text); margin-bottom: 56px; line-height: 1.2;
+      color: var(--text); margin-bottom: 36px; line-height: 1.2;
     }
 
     /* ── ORNAMENT ── */
     .ornament {
       display: flex; align-items: center; justify-content: center;
-      gap: 18px; padding: 48px 0; position: relative; z-index: 10; opacity: .2;
+      gap: 18px; padding: 28px 0; position: relative; z-index: 10; opacity: .2;
     }
     .ornament-line { width: 100px; height: 1px; background: linear-gradient(to right, transparent, var(--fire-1)); }
     .ornament-line.r { background: linear-gradient(to left, transparent, var(--fire-1)); }
@@ -303,12 +304,12 @@
 
     /* ── ABOUT STORY BLOCKS ── */
     .about-story {
-      margin-top: 72px;
-      padding-top: 56px;
+      margin-top: 48px;
+      padding-top: 36px;
       border-top: 1px solid rgba(201,168,76,0.1);
     }
     .about-block {
-      margin-bottom: 52px;
+      margin-bottom: 36px;
       padding-left: 28px;
       border-left: 1px solid rgba(201,168,76,0.18);
       position: relative;
@@ -369,7 +370,7 @@
 
     /* ── CONTACT ── */
     .contact-wrap {
-      position: relative; z-index: 10; text-align: center; padding: 100px 40px 180px;
+      position: relative; z-index: 10; text-align: center; padding: 70px 40px 120px;
     }
     .contact-label {
       font-family: 'Cinzel', serif; font-size: 9px;
@@ -475,15 +476,15 @@
       nav { padding: 18px 20px; }
       .nav-logo-name { font-size: 11px; letter-spacing: .15em; }
 
-      .section-wrap { padding: 60px 20px; }
-      .hero { padding: 100px 20px 140px; }
+      .section-wrap { padding: 48px 20px; }
+      .hero { padding: 72px 20px 80px; }
       .hero-subtitle { font-size: 10px; letter-spacing: .3em; }
 
       /* About */
       .about-grid { grid-template-columns: 1fr; gap: 32px; }
       .about-frame { display: block; max-width: 220px; aspect-ratio: 3/4; margin: 0 auto; }
       .about-block-body { max-width: 100%; }
-      .about-story { margin-top: 48px; padding-top: 40px; }
+      .about-story { margin-top: 32px; padding-top: 28px; }
 
       /* Services — flagship: collapse to single column */
       .service-flagship {
@@ -505,7 +506,7 @@
       .flagship-title  { font-size: 22px; }
       .flagship-right .service-desc { font-size: 15px; }
 
-      .contact-wrap { padding: 70px 20px 140px; }
+      .contact-wrap { padding: 50px 20px 100px; }
     }
   </style>
 </head>
@@ -543,16 +544,7 @@
 <!-- ══ HERO ═════════════════════════════════════════════ -->
 <section class="hero">
   <div class="sigil">
-    <svg viewBox="0 0 120 120" fill="none">
-      <circle cx="60" cy="60" r="56" stroke="#C0392B" stroke-width="0.8" opacity="0.35"/>
-      <circle cx="60" cy="60" r="44" stroke="#C0392B" stroke-width="0.5" opacity="0.2"/>
-      <circle cx="60" cy="60" r="30" stroke="#C0392B" stroke-width="0.4" opacity="0.12"/>
-      <path d="M60,12 L80.83,103.25 L22.47,30.07 L106.80,70.68 L13.20,70.68 L97.53,30.07 L39.17,103.25 Z"
-            stroke="#E8541A" stroke-width="1.2" fill="none"
-            style="filter:drop-shadow(0 0 6px rgba(232,84,26,.7))"/>
-      <text x="60" y="68" text-anchor="middle" font-family="Georgia,serif"
-            font-size="16" font-style="italic" fill="#D4C8B8" opacity="0.9" letter-spacing="3">VII</text>
-    </svg>
+    <img src="images/sigil.png" alt="Antony Seven sigil"/>
   </div>
 
   <p class="hero-eyebrow">
@@ -582,7 +574,7 @@
 </section>
 
 <!-- ══ ABOUT ═════════════════════════════════════════════ -->
-<div id="about" class="section-wrap" style="padding-bottom:120px;">
+<div id="about" class="section-wrap" style="padding-bottom:80px;">
   <div class="section-label reveal">
     <span class="ru">О мастере</span>
     <span class="en" style="display:none">About</span>
@@ -753,14 +745,14 @@
     <div class="flagship-left">
       <div class="flagship-num">01</div>
       <h3 class="flagship-title">
-        <span class="ru">Обучение оккультизму</span>
-        <span class="en" style="display:none">Occult Instruction</span>
+        <span class="ru">Обучение Оккультизму и Магии</span>
+        <span class="en" style="display:none">Occult & Magic Instruction</span>
       </h3>
     </div>
     <div class="flagship-right">
       <p class="service-desc">
-        <span class="ru">Системное погружение в традицию — от первых шагов до самостоятельной работы. Церемониальная магия, хаос-магия, работа с сигилами, сущностями и символическими системами. Каждый ученик получает индивидуальный путь, выстроенный под его природу и задачи.</span>
-        <span class="en" style="display:none">Systematic immersion into tradition — from first steps to independent work. Ceremonial magic, chaos magic, sigils, entities, and symbolic systems. Each student receives an individual path, built around their nature and goals.</span>
+        <span class="ru">Полная теоретическая база: природа Высших Сил, обитатели мест силы, работа с атрибутами. Путь от теории до самостоятельной практики — ученик научится составлять ритуалы, работать с людьми, и по итогу полноценно практикует как ведьма или колдун.</span>
+        <span class="en" style="display:none">Complete theoretical foundation: the nature of the Higher Forces, inhabitants of places of power, ritual tools. From theory to independent practice — the student learns to compose rituals, work with clients, and ultimately operates as a fully initiated witch or sorcerer.</span>
       </p>
     </div>
   </div>
@@ -784,8 +776,8 @@
           <span class="en" style="display:none">Ritual Work</span>
         </h3>
         <p class="list-item-desc">
-          <span class="ru">Индивидуальные практики с учётом вашей ситуации. Работа с намерением, пространством и силами за пределами обыденного.</span>
-          <span class="en" style="display:none">Individual practices tailored to your situation. Working with intention, space, and forces that lie beyond the ordinary.</span>
+          <span class="ru">Провожу ритуал под вашу конкретную ситуацию. Каждая работа выстраивается индивидуально — с учётом обстоятельств, запроса и того, что стоит за ним.</span>
+          <span class="en" style="display:none">I perform a ritual tailored to your specific situation. Each working is built individually — shaped by your circumstances, your request, and what lies beneath it.</span>
         </p>
       </div>
     </div>
@@ -810,34 +802,8 @@
           <span class="en" style="display:none">Consultation</span>
         </h3>
         <p class="list-item-desc">
-          <span class="ru">Разбор ситуации через призму скрытых механизмов. Диагностика, понимание причин и указание возможных путей.</span>
-          <span class="en" style="display:none">Analysis of your situation through the lens of hidden mechanisms. Diagnostics, understanding causes, and pointing toward possible paths.</span>
-        </p>
-      </div>
-    </div>
-
-    <div class="service-list-item reveal">
-      <!-- Solar cross / protective circle silhouette -->
-      <div class="item-symbol" aria-hidden="true">
-        <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="50" cy="50" r="46" stroke="white" stroke-width="0.7"/>
-          <circle cx="50" cy="50" r="24" stroke="white" stroke-width="0.5"/>
-          <circle cx="50" cy="50" r="4" fill="white" opacity="0.5"/>
-          <line x1="50" y1="4" x2="50" y2="96" stroke="white" stroke-width="0.8"/>
-          <line x1="4" y1="50" x2="96" y2="50" stroke="white" stroke-width="0.8"/>
-          <line x1="17" y1="17" x2="83" y2="83" stroke="white" stroke-width="0.4"/>
-          <line x1="83" y1="17" x2="17" y2="83" stroke="white" stroke-width="0.4"/>
-        </svg>
-      </div>
-      <span class="list-item-num">04</span>
-      <div class="list-item-body">
-        <h3 class="list-item-title">
-          <span class="ru">Работа с пространством</span>
-          <span class="en" style="display:none">Space Work</span>
-        </h3>
-        <p class="list-item-desc">
-          <span class="ru">Очищение и настройка места. Устранение нежелательных влияний, создание защитного контура и гармонизация среды обитания.</span>
-          <span class="en" style="display:none">Cleansing and tuning of a place. Removal of unwanted influences, creation of protective boundaries and harmonisation of living space.</span>
+          <span class="ru">Выхожу на связь с мёртвыми, обращаюсь к Роду и смотрю ситуацию через ясновидение. Выявляю глубинные причины проблемы — и даю чёткое указание, как её решить.</span>
+          <span class="en" style="display:none">I connect with the dead, reach out to the ancestral line, and read the situation through clairvoyance. I identify the root causes of the problem and give a clear direction for its resolution.</span>
         </p>
       </div>
     </div>
