@@ -1,0 +1,11 @@
+# Databases / local data
+*.db
+ruvector.db
+
+# OS / editor junk
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs
+*.log
