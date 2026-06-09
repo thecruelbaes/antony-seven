@@ -61,6 +61,7 @@
       background: linear-gradient(to bottom, rgba(8,6,8,.97) 0%, transparent 100%);
     }
     .nav-logo { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+    .nav-sigil { width: 64px; height: 64px; object-fit: contain; opacity: 0.85; }
     .nav-logo-text { display: flex; flex-direction: column; }
     .nav-logo-name {
       font-family: 'Cinzel Decorative', serif; font-size: 13px;
@@ -141,18 +142,12 @@
       opacity: 0; animation: fadeIn 1s ease 2.1s forwards;
     }
     .scroll-hint {
-      position: absolute; bottom: 80px; left: 50%; transform: translateX(-50%);
-      display: flex; flex-direction: column; align-items: center; gap: 8px;
+      position: absolute; bottom: 32px; left: 50%; transform: translateX(-50%);
       opacity: 0; animation: fadeIn 1s ease 2.5s forwards;
     }
-    .scroll-hint span {
-      font-family: 'Cinzel', serif; font-size: 8px; letter-spacing: .5em;
-      color: var(--muted); text-transform: uppercase; opacity: .5;
-    }
-    .scroll-line {
-      width: 1px; height: 48px;
-      background: linear-gradient(to bottom, var(--fire-2), transparent);
-      animation: scrollPulse 2.5s ease infinite;
+    .scroll-hint img {
+      width: 48px; height: 48px; object-fit: contain;
+      opacity: 0.35; animation: scrollPulse 2.5s ease infinite;
     }
 
     /* ── SECTIONS ── */
@@ -518,15 +513,7 @@
 <!-- ══ NAV ══════════════════════════════════════════════ -->
 <nav>
   <a href="#" class="nav-logo">
-    <svg width="38" height="38" viewBox="0 0 120 120" fill="none">
-      <circle cx="60" cy="60" r="56" stroke="#C0392B" stroke-width="0.8" opacity="0.4"/>
-      <circle cx="60" cy="60" r="44" stroke="#C0392B" stroke-width="0.5" opacity="0.2"/>
-      <path d="M60,12 L80.83,103.25 L22.47,30.07 L106.80,70.68 L13.20,70.68 L97.53,30.07 L39.17,103.25 Z"
-            stroke="#E8541A" stroke-width="1.1" fill="none" opacity="0.9"
-            style="filter:drop-shadow(0 0 4px rgba(232,84,26,.6))"/>
-      <circle cx="60" cy="60" r="6" fill="#C0392B" opacity="0.65"
-              style="filter:drop-shadow(0 0 5px rgba(192,57,43,.8))"/>
-    </svg>
+    <img src="images/sigil.png" alt="" class="nav-sigil"/>
     <div class="nav-logo-text">
       <span class="nav-logo-name">Antony Seven</span>
       <span class="nav-logo-sub">
@@ -567,9 +554,7 @@
   </a>
   <p class="hero-handle">@Antony_Seven</p>
   <div class="scroll-hint">
-    <span class="ru">далее</span>
-    <span class="en" style="display:none">scroll</span>
-    <div class="scroll-line"></div>
+    <img src="images/sigil.png" alt=""/>
   </div>
 </section>
 
@@ -852,7 +837,7 @@
 </div>
 
 <!-- ══ FOOTER ════════════════════════════════════════════ -->
-<footer>© 2025 Antony Seven · All Rights Reserved</footer>
+<footer>© 2026 Antony Seven · All Rights Reserved</footer>
 
 <script>
 // ── LANG TOGGLE ─────────────────────────────────────────
